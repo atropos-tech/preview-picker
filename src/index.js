@@ -2,15 +2,11 @@ import React from 'react';
 import createReactClass from 'create-react-class';
 import Downshift from 'downshift';
 import keycode from 'keycode';
-import { TextField, Paper, MenuItem, Chip } from 'material-ui';
+import PickerInput from './PickerInput';
+import PickerDropdown from './PickerDropdown';
+import PickerChip from './PickerChip';
+import { Paper, Typography } from 'material-ui';
 
-const items = [
-    {value: 'apple'},
-    {value: 'pear'},
-    {value: 'orange'},
-    {value: 'grape'},
-    {value: 'banana'},
-];
 
 function withoutLastItem(array) {
     if ( array.length ) {        
@@ -19,50 +15,27 @@ function withoutLastItem(array) {
     return array;
 }
 
-function PickerInput({ value, onChange, startAdornment, ...inputProps }) {            
-    const InputProps = {
-        inputProps,        
-        startAdornment: startAdornment.length ? startAdornment : false //needed to make the label appear correctly
-    };    
-    return (
-        <TextField label="woot" value={ value } onChange={ onChange } InputProps={ InputProps } />
-    );
-}
-
-function getVisibleItems(items, inputValue) {
-    if ( inputValue ) {
-        return items.filter(item => item.value.includes(inputValue));
-    }
-    return items;
-}
-
-function PickerDropdown(props) {
-    const { isOpen, inputValue, highlightedIndex, selectedItem, getItemProps } = props;
-    if ( isOpen ) {
-        const visibleItems = getVisibleItems(items, inputValue);
+const PickedItemSection = createReactClass({
+    getInitialState() {
+        return { isExpanded: false };
+    },
+    render() {
+        const { item } = this.props;
+        const rows = Array(item.rows).fill('some row');
         return (
             <Paper square>
+                <Typography>item.value</Typography>
                 {
-                    visibleItems.map((item, index) => {
-                        const itemProps = getItemProps({
-                            index,
-                            item,
-                            style: {
-                              backgroundColor:
-                                highlightedIndex === index ? 'lightgray' : 'white',
-                              fontWeight: selectedItem === item ? 'bold' : 'normal',
-                            },
-                        });                        
-                        return (
-                            <MenuItem key={ item.value } {...itemProps}>{ item.value }</MenuItem>
-                        );
-                    })
+                    rows.map((row, index) => 
+                        (
+                            <Typography key={ index }>{ row }</Typography>
+                        )
+                    )
                 }
             </Paper>
         );
-    }
-    return false;
-}
+    }    
+});
 
 const PreviewPicker = createReactClass({
     getInitialState() {
@@ -72,17 +45,13 @@ const PreviewPicker = createReactClass({
         };
     },
     handleInputChange(inputChangeEvent) {
-        this.setState({
-            inputValue: inputChangeEvent.target.value
-        });
+        this.setState({ inputValue: inputChangeEvent.target.value });
     },
     handleKeyDown(keyDownEvent) {
         const { inputValue } = this.state;
         if (!inputValue.length && keycode(keyDownEvent) === 'backspace') {
             this.setState(oldState => {                
-                return {
-                    selectedItems: withoutLastItem(oldState.selectedItems)
-                };
+                return { selectedItems: withoutLastItem(oldState.selectedItems) };
             });                
         }
     },
@@ -104,17 +73,18 @@ const PreviewPicker = createReactClass({
     getInputAdornments() {        
         return this.state.selectedItems.map(item =>
             (
-                <Chip
-                    key={item.value}
-                    tabIndex={ -1 }
-                    label={ item.value }
+                <PickerChip 
+                    key={ item.value }
+                    item={ item }
                     onDelete={ () => this.handleDeleteItem(item) }
+                    onClick={ () => window.alert('show full deets') }
                 />
             )
         );
     },
     render() {
-        const { inputValue } = this.state;        
+        const { inputValue, selectedItems } = this.state;
+        const { fullWidth } = this.props;
         return (
             <Downshift
                 inputValue={ inputValue }
@@ -131,9 +101,17 @@ const PreviewPicker = createReactClass({
                                         onChange: this.handleInputChange,
                                         onKeyDown: this.handleKeyDown
                                      })
-                                 } 
+                                 }
+                                 fullWidth={ fullWidth }
                                 />
                             <PickerDropdown {...dropdownProps} />
+                            {
+                                selectedItems.map(item => 
+                                    (
+                                        <PickedItemSection key={ item.value } item={ item } />
+                                    )
+                                )
+                            }
                         </div>
                     )
                 }

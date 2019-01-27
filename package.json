@@ -33,6 +33,7 @@
     "eslint-plugin-react": "^7.12.4",
     "jest": "^23.6.0",
     "material-ui": "^1.0.0-beta.39",
+    "prop-types": "^15.6.2",
     "react": "^15.6.2",
     "react-dom": "^15.6.2",
     "webpack": "^4.29.0",
