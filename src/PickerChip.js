@@ -1,12 +1,15 @@
 import React from 'react';
 import createReactClass from 'create-react-class';
-import { Chip } from 'material-ui';
+import { Chip, Tooltip } from 'material-ui';
 
 const PickerChip = createReactClass({    
     render() {
-        const { item, onDelete, onClick } = this.props;        
+        const { item, onDelete, onClick, isHighlighted } = this.props;
+        const style = isHighlighted ? { color: "#fff", backgroundColor: "#239" } : undefined;
         return (
-            <Chip tabIndex={ -1 } label={ item.value } onDelete={ onDelete } onClick={ onClick } />      
+            <Tooltip title="Click to show preview">
+                <Chip tabIndex={ -1 } style={ style } label={ item.value } onDelete={ onDelete } onClick={ onClick } />      
+            </Tooltip>
         );
     }
 });

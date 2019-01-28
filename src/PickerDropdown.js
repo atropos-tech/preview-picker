@@ -21,7 +21,7 @@ function PickerDropdown(props) {
     if ( isOpen ) {
         const visibleItems = getVisibleItems(items, inputValue);
         return (
-            <Paper square>
+            <Paper square style={{ position: "absolute" }}>
                 {
                     visibleItems.map((item, index) => {
                         const itemProps = getItemProps({

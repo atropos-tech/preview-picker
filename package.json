@@ -4,8 +4,8 @@
   "description": "A multiselect component that loads dynamic previews",
   "main": "lib/index.js",
   "repository": {
-    "type" : "git",
-    "url" : "https://github.com/atropos-tech/preview-picker.git"
+    "type": "git",
+    "url": "https://github.com/atropos-tech/preview-picker.git"
   },
   "scripts": {
     "test": "jest",
@@ -22,7 +22,6 @@
     "downshift": "^3.2.0",
     "keycode": "^2.2.0",
     "lodash": "^4.17.11",
-    "material-ui": "^1.0.0-beta.39",
     "react-redux": "^5.1.1",
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0"
@@ -31,6 +30,7 @@
     "@babel/core": "^7.2.2",
     "@babel/preset-env": "^7.3.1",
     "@babel/preset-react": "^7.0.0",
+    "@babel/runtime": "^7.3.1",
     "babel-loader": "^8.0.5",
     "enzyme": "^3.8.0",
     "enzyme-adapter-react-15": "^1.3.0",
@@ -38,6 +38,7 @@
     "eslint-plugin-import": "^2.15.0",
     "eslint-plugin-react": "^7.12.4",
     "jest": "^23.6.0",
+    "material-ui": "^1.0.0-beta.39",
     "prop-types": "^15.6.2",
     "react": "^15.6.2",
     "react-dom": "^15.6.2",
@@ -46,6 +47,6 @@
     "webpack-dev-server": "^3.1.14"
   },
   "peerDependencies": {
-    "react": "^15.6"    
+    "react": "^15.6"
   }
 }

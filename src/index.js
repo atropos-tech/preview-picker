@@ -5,85 +5,59 @@ import keycode from 'keycode';
 import PickerInput from './PickerInput';
 import PickerDropdown from './PickerDropdown';
 import PickerChip from './PickerChip';
-import { Paper, Typography } from 'material-ui';
 
-
-function withoutLastItem(array) {
-    if ( array.length ) {        
-        return array.slice(0, array.length - 1);
+function getLast(array) {
+    if (array.length) {
+        return array[array.length - 1];
     }
-    return array;
 }
-
-const PickedItemSection = createReactClass({
-    getInitialState() {
-        return { isExpanded: false };
-    },
-    render() {
-        const { item } = this.props;
-        const rows = Array(item.rows).fill('some row');
-        return (
-            <Paper square>
-                <Typography>item.value</Typography>
-                {
-                    rows.map((row, index) => 
-                        (
-                            <Typography key={ index }>{ row }</Typography>
-                        )
-                    )
-                }
-            </Paper>
-        );
-    }    
-});
 
 const PreviewPicker = createReactClass({
     getInitialState() {
-        return {
-            selectedItems: [],
-            inputValue: ""
-        };
+        return { inputValue: "" };
     },
     handleInputChange(inputChangeEvent) {
         this.setState({ inputValue: inputChangeEvent.target.value });
     },
     handleKeyDown(keyDownEvent) {
-        const { inputValue } = this.state;
+        const { inputValue } = this.state;        
         if (!inputValue.length && keycode(keyDownEvent) === 'backspace') {
-            this.setState(oldState => {                
-                return { selectedItems: withoutLastItem(oldState.selectedItems) };
-            });                
+            const { value, highlightedItem } = this.props;
+            const lastItem = getLast(value);
+            if (lastItem) {
+                this.handleDeleteItem(lastItem);
+            }            
         }
     },
     handleAddItem(itemToAdd) {
-        this.setState(oldState => {            
-            return {
-                selectedItems: [...oldState.selectedItems, itemToAdd],
-                inputValue: ""
-            };
-        });            
+        const { value, onChange, onHighlightedChange } = this.props;
+        onChange([...value, itemToAdd]);
+        onHighlightedChange(itemToAdd);
+        this.setState({ inputValue: "" });
     },
     handleDeleteItem(itemToDelete) {
-        this.setState(oldState => {            
-            return { 
-                selectedItems: oldState.selectedItems.filter(item => item !== itemToDelete)
-            };
-        });
+        const { value, onChange, highlightedItem, onHighlightedChange } = this.props;        
+        onChange(value.filter(item => item !== itemToDelete));
+        if ( itemToDelete === highlightedItem ) {
+            onHighlightedChange(undefined);
+        }
     },
-    getInputAdornments() {        
-        return this.state.selectedItems.map(item =>
+    getInputAdornments() {  
+        const { value, onHighlightedChange, highlightedItem } = this.props;
+        return value.map(item =>
             (
                 <PickerChip 
                     key={ item.value }
                     item={ item }
                     onDelete={ () => this.handleDeleteItem(item) }
-                    onClick={ () => window.alert('show full deets') }
+                    onClick={ () => onHighlightedChange(item) }
+                    isHighlighted={ item === highlightedItem }
                 />
             )
         );
     },
     render() {
-        const { inputValue, selectedItems } = this.state;
+        const { inputValue } = this.state;
         const { fullWidth } = this.props;
         return (
             <Downshift
@@ -105,13 +79,6 @@ const PreviewPicker = createReactClass({
                                  fullWidth={ fullWidth }
                                 />
                             <PickerDropdown {...dropdownProps} />
-                            {
-                                selectedItems.map(item => 
-                                    (
-                                        <PickedItemSection key={ item.value } item={ item } />
-                                    )
-                                )
-                            }
                         </div>
                     )
                 }
