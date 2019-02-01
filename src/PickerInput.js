@@ -1,11 +1,21 @@
-import React from 'react';
-import { func, string, bool, node } from 'prop-types';
-import { TextField } from 'material-ui';
+import React from "react";
+import { func, string, bool, node, object } from "prop-types";
+import { TextField } from "material-ui";
+import { withStyles } from "material-ui/styles";
 
-function PickerInput({ value, onChange, fullWidth, startAdornment, ...otherProps }) {            
+const styles = {
+    rootInput: {
+        display: "flex",
+        flexWrap: "wrap",
+        padding: "4px 0"
+    }
+};
+
+function PickerInput({ value, onChange, fullWidth, startAdornment, classes, ...otherProps }) {
     const InputProps = {
-        inputProps: otherProps,        
-        startAdornment: startAdornment.length ? startAdornment : false //needed to make the label appear correctly
+        inputProps: otherProps,
+        startAdornment: startAdornment.length ? startAdornment : false, //needed to make the label appear correctly,
+        classes: { root: classes.rootInput }
     };
 
     //this ensures that the label will be shown above the input field if there are selected items,
@@ -15,11 +25,11 @@ function PickerInput({ value, onChange, fullWidth, startAdornment, ...otherProps
     };
     return (
         <TextField
-            fullWidth={ fullWidth } 
-            label='Your favourite fruit' 
-            value={ value } 
-            onChange={ onChange } 
-            InputProps={ InputProps } 
+            fullWidth={ fullWidth }
+            label='Your favourite fruit'
+            value={ value }
+            onChange={ onChange }
+            InputProps={ InputProps }
             InputLabelProps={ InputLabelProps }
         />
     );
@@ -29,7 +39,8 @@ PickerInput.propTypes = {
     value: string.isRequired,
     onChange: func.isRequired,
     fullWidth: bool,
-    startAdornment: node
+    startAdornment: node,
+    classes: object
 };
 
 PickerInput.defaultProps = {
@@ -37,4 +48,4 @@ PickerInput.defaultProps = {
     startAdornment: false
 };
 
-export default PickerInput;
+export default withStyles(styles)(PickerInput);

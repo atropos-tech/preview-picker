@@ -1,38 +1,23 @@
-import React from 'react';
-import { Paper, MenuItem } from 'material-ui';
+import React from "react";
+import { Paper, MenuItem } from "material-ui";
 
-const items = [
-    {value: 'apple', rows: 15 },
-    {value: 'pear', rows: 2 },
-    {value: 'orange', rows: 7 },
-    {value: 'grape', rows: 20 },
-    {value: 'banana', rows: 500 },
-];
-
-function getVisibleItems(items, inputValue) {
-    if ( inputValue ) {
-        return items.filter(item => item.value.includes(inputValue));
-    }
-    return items;
-}
-
-function PickerDropdown(props) {
-    const { isOpen, inputValue, highlightedIndex, getItemProps } = props;
+function PickerDropdown({ isOpen, inputValue, highlightedIndex, selectedItems, getItemProps, getSuggestedItems, itemToString }) {
     if ( isOpen ) {
-        const visibleItems = getVisibleItems(items, inputValue);
+        const visibleItems = getSuggestedItems(inputValue, selectedItems);
         return (
-            <Paper square style={{ position: "absolute" }}>
+            <Paper square style={{ position: "absolute", zIndex: 100 }}>
                 {
                     visibleItems.map((item, index) => {
                         const itemProps = getItemProps({
                             index,
                             item,
                             style: {
-                                backgroundColor: highlightedIndex === index ? 'lightgray' : 'white'                              
+                                backgroundColor: highlightedIndex === index ? "lightgray" : "white"
                             },
-                        });                        
+                        });
+                        const itemString = itemToString(item);
                         return (
-                            <MenuItem key={ item.value } {...itemProps}>{ item.value }</MenuItem>
+                            <MenuItem key={ itemString } {...itemProps}>{ itemString }</MenuItem>
                         );
                     })
                 }

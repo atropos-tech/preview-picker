@@ -1,89 +1,55 @@
-import React from 'react';
-import createReactClass from 'create-react-class';
-import Downshift from 'downshift';
-import keycode from 'keycode';
-import PickerInput from './PickerInput';
-import PickerDropdown from './PickerDropdown';
-import PickerChip from './PickerChip';
-
-function getLast(array) {
-    if (array.length) {
-        return array[array.length - 1];
-    }
-}
+import React from "react";
+import { func, array, any } from "prop-types";
+import createReactClass from "create-react-class";
+import Picker from "./Picker";
+import PreviewSection from "./PreviewSection";
 
 const PreviewPicker = createReactClass({
+    propTypes: {
+        value: array.isRequired,
+        PreviewComponent: any.isRequired,
+        onChange: func.isRequired,
+        getSuggestedItems: func.isRequired,
+        itemToString: func.isRequired
+    },
     getInitialState() {
-        return { inputValue: "" };
+        return { highlightedItem: undefined };
     },
-    handleInputChange(inputChangeEvent) {
-        this.setState({ inputValue: inputChangeEvent.target.value });
+    handleHighlightedChange(highlightedItem) {
+        this.setState({ highlightedItem });
     },
-    handleKeyDown(keyDownEvent) {
-        const { inputValue } = this.state;        
-        if (!inputValue.length && keycode(keyDownEvent) === 'backspace') {
-            const { value, highlightedItem } = this.props;
-            const lastItem = getLast(value);
-            if (lastItem) {
-                this.handleDeleteItem(lastItem);
-            }            
-        }
-    },
-    handleAddItem(itemToAdd) {
-        const { value, onChange, onHighlightedChange } = this.props;
-        onChange([...value, itemToAdd]);
-        onHighlightedChange(itemToAdd);
-        this.setState({ inputValue: "" });
-    },
-    handleDeleteItem(itemToDelete) {
-        const { value, onChange, highlightedItem, onHighlightedChange } = this.props;        
-        onChange(value.filter(item => item !== itemToDelete));
-        if ( itemToDelete === highlightedItem ) {
-            onHighlightedChange(undefined);
-        }
-    },
-    getInputAdornments() {  
-        const { value, onHighlightedChange, highlightedItem } = this.props;
-        return value.map(item =>
-            (
-                <PickerChip 
-                    key={ item.value }
-                    item={ item }
-                    onDelete={ () => this.handleDeleteItem(item) }
-                    onClick={ () => onHighlightedChange(item) }
-                    isHighlighted={ item === highlightedItem }
-                />
-            )
-        );
+    handleClearHighlight() {
+        this.setState({ highlightedItem: false });
     },
     render() {
-        const { inputValue } = this.state;
-        const { fullWidth } = this.props;
+        const { value, PreviewComponent, onChange, getSuggestedItems, itemToString } = this.props;
+        const { highlightedItem, isLoading } = this.state;
         return (
-            <Downshift
-                inputValue={ inputValue }
-                onChange={ this.handleAddItem }
-                itemToString={item => (item ? item.value : '')}
-            >
+            <div>
+                <Picker
+                    fullWidth
+                    value={ value }
+                    onChange={ onChange }
+                    highlightedItem={ highlightedItem }
+                    onHighlightedChange={ this.handleHighlightedChange }
+                    getSuggestedItems={ getSuggestedItems }
+                    itemToString={ itemToString }
+                />
                 {
-                    ({ getInputProps, ...dropdownProps }) => (           
-                        <div>
-                            <PickerInput
-                                 {
-                                     ...getInputProps({
-                                        startAdornment: this.getInputAdornments(),
-                                        onChange: this.handleInputChange,
-                                        onKeyDown: this.handleKeyDown
-                                     })
-                                 }
-                                 fullWidth={ fullWidth }
-                                />
-                            <PickerDropdown {...dropdownProps} />
+                    highlightedItem && (
+                        <div style={ { padding: "8px 0", paddingLeft: "24px" } } >
+                            <PreviewSection
+                                item={ highlightedItem }
+                                isLoading={ isLoading }
+                                onClose={ this.handleClearHighlight }
+                                PreviewComponent={ PreviewComponent }
+                                itemToString={ itemToString }
+                            />
                         </div>
                     )
                 }
-            </Downshift>
-          );
+            </div>
+        );
     }
 });
 

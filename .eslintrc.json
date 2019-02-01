@@ -3,8 +3,8 @@
         "browser": true
     },
     "parserOptions": {
-        "ecmaVersion": 6,
-        "sourceType": "module",
+        "ecmaVersion": 9,
+        "sourceType": "module",        
         "ecmaFeatures": {
             "jsx": true
         }
@@ -25,7 +25,7 @@
         "eqeqeq": "error",
         "func-call-spacing": "error",
         "func-names": "error",
-        "id-blacklist": ["error", "data", "value", "val", "array", "object", "obj", "function", "func", "arg", "that", "err", "callback"],
+        "id-blacklist": ["error", "data", "val", "obj", "function", "arg", "that", "err", "callback"],
         "id-length": ["error", { "min": 3 }],
         "indent": ["error", 4],
         "key-spacing": "error",
@@ -33,7 +33,7 @@
         "max-depth": ["error", { "max": 4 }],
         "max-len": ["error", { "code": 180 }],
         "max-lines": ["error", { "max": 300 }],
-        "max-lines-per-function": ["error", { "max": 25 }],
+        "max-lines-per-function": ["error", { "max": 30 }],
         "max-nested-callbacks": ["error", { "max": 4 }],
         "max-params": ["error", { "max": 8 }],
         "max-statements-per-line": "error",
@@ -123,10 +123,6 @@
         "react/no-this-in-sfc": "error",
         "react/no-unused-prop-types": "error",
         "react/void-dom-elements-no-children": "error",
-
-        
-
-
         "react/jsx-no-target-blank": "error"
 
     }
