@@ -5,7 +5,7 @@ import { render } from "react-dom";
 import PreviewPicker from "./index";
 import { MuiThemeProvider, createMuiTheme } from "material-ui/styles";
 import { blue, red } from "material-ui/colors";
-import { LinearProgress } from "material-ui";
+import { LinearProgress, Typography } from "material-ui";
 import createId from "uuid-v4";
 import Table from './table';
 
@@ -87,7 +87,7 @@ const Sandbox = createReactClass({
         return (
             <MuiThemeProvider theme={ sandboxTheme }>
                 <section>
-                    <h2>Preview Picker</h2>
+                    <Typography variant='headline'>Preview Picker</Typography>
                     <div style={ { width: "700px" } }>
                         <PreviewPicker
                             value={ selectedItems }

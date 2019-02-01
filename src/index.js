@@ -37,7 +37,7 @@ const PreviewPicker = createReactClass({
                 />
                 {
                     highlightedItem && (
-                        <div style={ { padding: "8px 0", paddingLeft: "24px" } } >
+                        <div>
                             <PreviewSection
                                 item={ highlightedItem }
                                 isLoading={ isLoading }
