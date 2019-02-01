@@ -5,10 +5,13 @@ import { any, func } from "prop-types";
 function PickedItemSection({ item, onClose, PreviewComponent, itemToString }) {
     return (
         <Paper square>
-            <Typography>
-                Details for { itemToString(item) }
-                <Button onClick={ onClose }>Close preview</Button>
-            </Typography>
+            <div style={ { display: "flex", alignItems: "center", margin: "0 4px" }}>
+                <Typography variant="headline" style={ { flex: "1 1 auto" }}>
+                    Details for { itemToString(item) }
+                </Typography>
+                <Button onClick={ onClose }>Close</Button>
+            </div>
+
             <PreviewComponent item={ item } />
         </Paper>
     );

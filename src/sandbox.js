@@ -6,6 +6,8 @@ import PreviewPicker from "./index";
 import { MuiThemeProvider, createMuiTheme } from "material-ui/styles";
 import { blue, red } from "material-ui/colors";
 import { LinearProgress } from "material-ui";
+import createId from "uuid-v4";
+import Table from './table';
 
 const ALL_ITEMS = [
     {value: "apple", rows: 15 },
@@ -33,6 +35,15 @@ const sandboxTheme = createMuiTheme({
 
 const previewCache = {};
 
+function createRandomRow() {
+    return {
+        weight: "43g",
+        timePicked: "4 hours ago",
+        pickerName: "Jeff",
+        id: createId()
+    };
+}
+
 const SandboxPreview = createReactClass({
     propTypes: {
         item: any
@@ -47,7 +58,7 @@ const SandboxPreview = createReactClass({
         const { item } = this.props;
         if ( !previewCache[ item.value ] ) {
             setTimeout(() => {
-                previewCache[ item.value ] = Array(item.rows).fill(true).map(() => "some row");
+                previewCache[ item.value ] = Array(item.rows).fill(true).map(createRandomRow);
                 this.forceUpdate();
             }, 1200);
         }
@@ -57,15 +68,7 @@ const SandboxPreview = createReactClass({
         const rows = previewCache[ item.value ];
         if (rows) {
             return (
-                <div style={ { maxHeight: "200px", overflowY: "auto" }}>
-                    {
-                        rows.map((row, index) =>
-                            (
-                                <div key={ index }>some row</div>
-                            )
-                        )
-                    }
-                </div>
+                <Table rows={ rows }/>
             );
         }
         return <LinearProgress />;
@@ -85,7 +88,7 @@ const Sandbox = createReactClass({
             <MuiThemeProvider theme={ sandboxTheme }>
                 <section>
                     <h2>Preview Picker</h2>
-                    <div style={ { width: "400px" } }>
+                    <div style={ { width: "700px" } }>
                         <PreviewPicker
                             value={ selectedItems }
                             onChange={ this.handleSelectedItemsChange }
